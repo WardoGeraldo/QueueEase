@@ -6,3 +6,10 @@
 //
 
 import Foundation
+
+struct QueueTicket: Identifiable, Codable {
+    let id: String // Maps to queueId
+    let queueNumber: String
+    let status: String
+    let createdAt: Date
+}

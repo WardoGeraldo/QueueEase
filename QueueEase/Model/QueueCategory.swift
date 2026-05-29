@@ -6,3 +6,10 @@
 //
 
 import Foundation
+
+struct QueueCategory: Identifiable, Codable {
+    let id: String // Maps to categoryId
+    let categoryName: String
+    let description: String
+    let isActive: Bool
+}
