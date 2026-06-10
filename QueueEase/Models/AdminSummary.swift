@@ -1,5 +1,5 @@
 //
-//  CustomerQueueViewModel.swift
+//  AdminSummary.swift
 //  QueueEase
 //
 //  Created by Edward Geraldo Kristian on 10/06/26.
