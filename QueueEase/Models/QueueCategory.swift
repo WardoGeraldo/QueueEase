@@ -7,3 +7,17 @@
 
 import Foundation
 
+struct QueueCategory: Codable, Hashable, Identifiable {
+    let categoryId: Int
+    let categoryName: String
+    let prefix: String
+    let currentNumber: Int?
+    let isActive: Bool?
+    let createdAt: String?
+    let updatedAt: String?
+
+    var id: Int {
+        categoryId
+    }
+}
+
