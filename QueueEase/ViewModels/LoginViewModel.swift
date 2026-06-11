@@ -2,15 +2,11 @@ import Foundation
 import Combine
 
 @MainActor
-final class RegisterViewModel: ObservableObject {
-    @Published var name = ""
+final class LoginViewModel: ObservableObject {
     @Published var username = ""
-    @Published var email = ""
     @Published var password = ""
-    @Published var confirmPassword = ""
     @Published var isLoading = false
     @Published var errorMessage: String?
-    @Published var successMessage: String?
 
     private let authService: AuthService
 
@@ -23,46 +19,24 @@ final class RegisterViewModel: ObservableObject {
     }
 
     var canSubmit: Bool {
-        !name.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty &&
-        !username.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty &&
-        !password.isEmpty &&
-        !confirmPassword.isEmpty &&
-        !isLoading
+        !username.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty && !password.isEmpty && !isLoading
     }
 
-    func register(session: AppSession) async {
-        let trimmedName = name.trimmingCharacters(in: .whitespacesAndNewlines)
-        let trimmedUsername = username.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
-        let trimmedEmail = email.trimmingCharacters(in: .whitespacesAndNewlines)
+    func login(session: AppSession) async {
+        let trimmedUsername = username.trimmingCharacters(in: .whitespacesAndNewlines)
 
-        guard !trimmedName.isEmpty, !trimmedUsername.isEmpty, !password.isEmpty else {
-            errorMessage = "Name, username, and password are required."
-            return
-        }
-
-        guard trimmedUsername.count >= 3, password.count >= 3 else {
-            errorMessage = "Username and password must be at least 3 characters."
-            return
-        }
-
-        guard password == confirmPassword else {
-            errorMessage = "Password confirmation does not match."
+        guard !trimmedUsername.isEmpty, !password.isEmpty else {
+            errorMessage = "Username and password are required."
             return
         }
 
         isLoading = true
         errorMessage = nil
-        successMessage = nil
 
         do {
-            let user = try await authService.register(
-                name: trimmedName,
-                username: trimmedUsername,
-                email: trimmedEmail.isEmpty ? nil : trimmedEmail,
-                password: password
-            )
-            successMessage = "Account created. Opening customer dashboard..."
+            let user = try await authService.login(username: trimmedUsername, password: password)
             session.login(user: user)
+            password = ""
         } catch {
             errorMessage = error.localizedDescription
         }
@@ -70,3 +44,4 @@ final class RegisterViewModel: ObservableObject {
         isLoading = false
     }
 }
+
